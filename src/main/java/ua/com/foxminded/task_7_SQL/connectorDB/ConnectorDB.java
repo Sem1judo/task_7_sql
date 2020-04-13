@@ -1,12 +1,11 @@
 package ua.com.foxminded.task_7_SQL.connectorDB;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import ua.com.foxminded.task_7_SQL.exeptions.DBConnectionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
+
 
 public class ConnectorDB {
 
@@ -16,19 +15,15 @@ public class ConnectorDB {
     static final String PASS = "root";
 
     public static Connection getConnect() {
-        Connection con = null;
+        Connection con;
         try {
             Class.forName(JDBC_DRIVER);
             con = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Success connection");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new DBConnectionException("Problem with connection to Database",e);
         }
         return con;
     }
-
-
 }
 

@@ -2,24 +2,23 @@ package ua.com.foxminded.task_7_SQL.runnerSQL;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
 import ua.com.foxminded.task_7_SQL.connectorDB.ConnectorDB;
+import ua.com.foxminded.task_7_SQL.exeptions.DBConnectionException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class RunnerScriptSQL {
 
-
-    private static final String SCRIPT_SQL = new File("src/main/resources/schoolDB.sql").getAbsolutePath();
-
-
-    public static void main(String args[]) throws Exception {
-        Connection con = ConnectorDB.getConnect();
-        ScriptRunner sr = new ScriptRunner(con);
-        Reader reader = new BufferedReader(new FileReader(SCRIPT_SQL));
-        sr.runScript(reader);
+    public void runScriptSQL(String script) {
+        Reader reader;
+        ScriptRunner scriptRunner;
+        try (Connection con = ConnectorDB.getConnect()) {
+            scriptRunner = new ScriptRunner(con);
+            reader = new BufferedReader(new FileReader(script));
+            scriptRunner.runScript(reader);
+        } catch (SQLException | FileNotFoundException e) {
+            new DBConnectionException("Problem with reading script", e);
+        }
     }
-
 }
