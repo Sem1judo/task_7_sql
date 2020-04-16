@@ -1,9 +1,8 @@
 package ua.com.foxminded.task_7_SQL;
 
-import org.apache.ibatis.jdbc.ScriptRunner;
 import ua.com.foxminded.task_7_SQL.jdbc.GroupDao;
 import ua.com.foxminded.task_7_SQL.jdbc.StudentDao;
-import ua.com.foxminded.task_7_SQL.jdbc.СourseDao;
+import ua.com.foxminded.task_7_SQL.jdbc.CourseDao;
 import ua.com.foxminded.task_7_SQL.runnerSQL.RunnerScriptSQL;
 
 import java.io.File;
@@ -13,7 +12,7 @@ public class ApplicationMenu {
     private static Scanner scanner = new Scanner(System.in);
     private static StudentDao studentDao = new StudentDao();
     private static GroupDao groupDao = new GroupDao();
-    private static СourseDao courseDao = new СourseDao();
+    private static CourseDao courseDao = new CourseDao();
     private static RunnerScriptSQL runnerScriptSQL = new RunnerScriptSQL();
     public static final String SCRIPT_SQL = new File("src/main/resources/schoolDB.sql").getAbsolutePath();
 

@@ -28,7 +28,7 @@ public class StudentDao {
 
             int rowAffected = pstmt.executeUpdate();
             if (rowAffected == 1) {
-               ResultSet rs = pstmt.getGeneratedKeys();
+                ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next())
                     studentId = rs.getInt(1);
             }
@@ -38,22 +38,25 @@ public class StudentDao {
         return studentId;
     }
 
-    public void deleteStudentById(int id) throws QueryExecutionException {
+    public boolean deleteStudentById(int id) throws QueryExecutionException {
+
+        boolean rowDeleted;
         try (Connection con = ConnectorDB.getConnect();
              PreparedStatement pstmt = con.prepareStatement(DELETE_STUDENT_BY_ID_QUERY)) {
 
             pstmt.setInt(1, id);
-            pstmt.execute();
+            rowDeleted = pstmt.executeUpdate() > 0;
 
         } catch (SQLException e1) {
             throw new QueryExecutionException("Can't delete student", e1);
         }
+        return rowDeleted;
     }
 
 
-    public List findStudentsFromCourse(String courseName) throws QueryExecutionException {
-        List<Student> studentsOnCourse = new ArrayList<>();
-        ResultSet rs = null;
+    public String findStudentsFromCourse(String courseName) throws QueryExecutionException {
+        StringBuilder studentsOnCourse = new StringBuilder();
+        ResultSet rs;
         try (Connection con = ConnectorDB.getConnect();
              PreparedStatement pstmt = con.prepareStatement(FIND_STUDENTS_FROM_COURSE_BY_NAME_QUERY)) {
 
@@ -62,12 +65,12 @@ public class StudentDao {
             while (rs.next()) {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
-                studentsOnCourse.add(new Student(firstName, lastName));
+                studentsOnCourse.append(firstName).append(" ").append(lastName).append("\n");
             }
         } catch (SQLException e) {
             throw new QueryExecutionException("Can't find students", e);
         }
-        return studentsOnCourse;
+        return studentsOnCourse.toString();
     }
 }
 
